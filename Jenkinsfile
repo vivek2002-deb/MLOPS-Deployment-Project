@@ -8,7 +8,7 @@ pipeline {
                     echo 'Cloning GitHub repo to Jenkins.........'
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: '*/master']],
+                        branches: [[name: '*/main']],
                         userRemoteConfigs: [[
                             url: 'https://github.com/vivek2002-deb/MLOPS-Deployment-Project.git',
                             credentialsId: 'github-token'
