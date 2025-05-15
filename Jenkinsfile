@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         VENV_DIR = 'venv'
+        GCP_PROJECT = "cogent-precinct-458914-g5"
+        GCLOUD_PATH = "/var/jenkins_home/google-cloud-sdk/bin"
     }
 
     stages {
@@ -32,6 +34,24 @@ pipeline {
                     pip install --upgrade pip
                     pip install -e .
                     '''
+                }
+            }
+        }
+
+        stage('Building and pushing docker image to GCP') {
+            steps {
+                withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]){
+                    script {
+                        echo 'Building and pushing docker image to GCP.........'
+                        sh '''
+                        export PATH=$PATH:${GCLOUD_PATH}
+                        gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+                        gcloud config set project ${GCP_PROJECT}
+                        gcloud auth configure-docker --quiet
+                        docker build -t gcr.io/${GCP_PROJECT}/mlops-deployment-project:latest .
+                        docker push gcr.io/${GCP_PROJECT}/mlops-deployment-project:latest
+                        '''
+                    }
                 }
             }
         }
