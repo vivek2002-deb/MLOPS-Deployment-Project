@@ -14,11 +14,11 @@ RUN apt-get update -y && \
     apt-get clean
 
 # Add Jenkins user to the Docker group (create if it doesn't exist)
-RUN groupadd -f docker && \
-    usermod -aG docker jenkins
+RUN groupadd -f podman && \
+    usermod -aG podman jenkins
 
 # Create the Docker directory and volume for DinD
-RUN mkdir -p /var/lib/docker
+RUN mkdir -p /var/lib/podman
 VOLUME /var/lib/docker
 
 # Switch back to the Jenkins user

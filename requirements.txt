@@ -6,3 +6,4 @@ PyYAML
 #imbalance-learn
 lightgbm
 mlflow
+flask
